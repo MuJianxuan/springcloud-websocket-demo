@@ -1,0 +1,17 @@
+server:
+  port: 8260
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  client:
+    # 是否注册自身到eureka
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://localhost:8260/eureka
+  server:
+    wait-time-in-ms-when-sync-empty: 5
+    eviction-interval-timer-in-ms: 5000
+    enable-self-preservation: false

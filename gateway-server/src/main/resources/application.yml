@@ -1,0 +1,36 @@
+server:
+  port: 80
+eureka:
+  instance:
+    ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8260/eureka
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+          # 启用eureka网关集成
+          enabled: true
+      routes:
+        # 负责websocket的前置连接
+        - id: bulletscreen
+          # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
+          uri: lb://websocket-server
+          predicates:
+            # 重点！转发该路径！
+            - Path=/websocket-server/info/**
+        - id: bulletscreen
+          # 重点！lb:ws://代表从注册中心获取服务，并且转发协议为websocket，这种格式怀疑人生！
+          uri: lb:ws://websocket-server
+          predicates:
+            # 转发/bullet端点下的所有路径
+            - Path=/websocket-server/**
+
+
